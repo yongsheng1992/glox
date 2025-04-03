@@ -31,7 +31,7 @@ type Scanner struct {
 	line    int
 
 	source string
-	tokens []Token
+	tokens []*Token
 }
 
 // isATEnd whether is at the end of the source
@@ -174,7 +174,7 @@ func (s *Scanner) advance() byte {
 }
 
 func (s *Scanner) addToken(tokenType TokenType, literal interface{}) {
-	token := Token{
+	token := &Token{
 		TokenType: tokenType,
 		Lexeme:    string(s.source[s.start:s.current]),
 		Literal:   literal,
@@ -209,7 +209,7 @@ func (s *Scanner) nextPeek() byte {
 	return s.source[s.current+1]
 }
 
-func (s *Scanner) ScanTokens() []Token {
+func (s *Scanner) scanTokens() []*Token {
 	for !s.isAtEnd() {
 		s.start = s.current
 		s.scanToken()

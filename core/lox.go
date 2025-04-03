@@ -46,7 +46,7 @@ func (g *Lox) RunPrompt() error {
 
 func (g *Lox) run(source string) error {
 	scanner := NewScanner(source)
-	tokens := scanner.ScanTokens()
+	tokens := scanner.scanTokens()
 
 	for _, token := range tokens {
 		fmt.Println(token)

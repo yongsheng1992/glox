@@ -7,14 +7,14 @@ import (
 
 type testcase struct {
 	input string
-	want  []Token
+	want  []*Token
 }
 
 func TestSingleCharacterTokens(t *testing.T) {
 	testcases := []testcase{
 		{
 			input: `var imAVariable = "here is my value";`,
-			want: []Token{
+			want: []*Token{
 				{
 					TokenType: Var,
 					Lexeme:    "var",
@@ -51,7 +51,7 @@ func TestSingleCharacterTokens(t *testing.T) {
 
 	for _, tc := range testcases {
 		scanner := NewScanner(tc.input)
-		tokens := scanner.ScanTokens()
+		tokens := scanner.scanTokens()
 		if !reflect.DeepEqual(tokens, tc.want) {
 			t.Errorf("TestSingleCharacterTokens got %v want %v", tokens, tc.want)
 		}
