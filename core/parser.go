@@ -53,12 +53,14 @@ func (parser *Parser) unary() Expr {
 func (parser *Parser) primary() Expr {
 	if parser.match(Number) {
 		return NewLiteral(parser.previous().Literal)
+	} else if parser.match(String) {
+		panic(NewParseError(parser.peek(), "String is currently unsupported!"))
 	} else if parser.match(LeftParen) {
 		expr := parser.expression()
 		parser.consume(RightParen, "Expect ')' after expression.")
 		return NewGrouping(expr)
 	} else {
-		panic("Expect expression.")
+		panic(NewParseError(parser.peek(), "Expect expression."))
 	}
 }
 
@@ -105,7 +107,7 @@ func (parser *Parser) consume(tokenType TokenType, message string) *Token {
 	if parser.check(tokenType) {
 		return parser.advance()
 	}
-	panic(message)
+	panic(NewParseError(parser.peek(), "Expect ')' after expression."))
 }
 
 // isAtEnd

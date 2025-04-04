@@ -10,23 +10,23 @@ import (
 type Lox struct {
 }
 
-func (g *Lox) error(line int, msg string) {
-	g.report(line, "", msg)
+func (lox *Lox) error(line int, msg string) {
+	lox.report(line, "", msg)
 }
 
-func (g *Lox) report(line int, where string, msg string) {
+func (lox *Lox) report(line int, where string, msg string) {
 	fmt.Printf("[line %d] error where: %s %s\n", line, where, msg)
 }
 
-func (g *Lox) RunFile(path string) error {
+func (lox *Lox) RunFile(path string) error {
 	bytes, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
-	return g.run(string(bytes))
+	return lox.run(string(bytes))
 }
 
-func (g *Lox) RunPrompt() error {
+func (lox *Lox) RunPrompt() error {
 	for {
 		fmt.Printf("> ")
 		ioScanner := bufio.NewReader(os.Stdin)
@@ -37,20 +37,26 @@ func (g *Lox) RunPrompt() error {
 		if len(bytes) == 1 && bytes[0] == '\x03' {
 			return nil
 		}
-		fmt.Printf("%c", bytes[0])
-		if err := g.run(strings.TrimSpace(string(bytes))); err != nil {
+		if err := lox.run(strings.TrimSpace(string(bytes))); err != nil {
 			return err
 		}
 	}
 }
 
-func (g *Lox) run(source string) error {
+func (lox *Lox) run(source string) error {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(r)
+		}
+	}()
 	scanner := NewScanner(source)
 	tokens := scanner.scanTokens()
 
-	for _, token := range tokens {
-		fmt.Println(token)
-	}
+	parser := NewParser(tokens)
+	expr := parser.parse()
 
+	interpreter := NewInterpreter(expr)
+	value := interpreter.evaluate(expr)
+	fmt.Printf("%f\n", value)
 	return nil
 }

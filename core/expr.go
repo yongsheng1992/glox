@@ -5,11 +5,11 @@ type Expr interface {
 }
 
 type Visitor interface {
-	visitBinaryExpr(binary Expr) interface{}
-	visitLiteralExpr(literal Expr) interface{}
-	visitUnaryExpr(unary Expr) interface{}
-	visitLogicalExpr(logical Expr) interface{}
-	visitGrouping(grouping Expr) interface{}
+	visitBinaryExpr(binary *Binary) interface{}
+	visitLiteralExpr(literal *Literal) interface{}
+	visitUnaryExpr(unary *Unary) interface{}
+	visitLogicalExpr(logical *Logical) interface{}
+	visitGrouping(grouping *Grouping) interface{}
 }
 
 type Binary struct {
