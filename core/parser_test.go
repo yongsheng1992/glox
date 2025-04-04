@@ -10,7 +10,7 @@ func TestParseOnePlusTwo(t *testing.T) {
 	scanner := NewScanner(source)
 	expr := NewBinary(
 		NewLiteral(1.0),
-		&Token{TokenType: Plus, Lexeme: "+", Line: 1},
+		&Token{TokenType: PLUS, Lexeme: "+", Line: 1},
 		NewLiteral(2.0),
 	)
 	tokens := scanner.scanTokens()
@@ -28,15 +28,15 @@ func TestParseComplex(t *testing.T) {
 		NewGrouping(
 			NewBinary(
 				NewLiteral(1.0),
-				&Token{TokenType: Plus, Lexeme: "+", Line: 1},
+				&Token{TokenType: PLUS, Lexeme: "+", Line: 1},
 				NewLiteral(2.0),
 			),
 		),
-		&Token{TokenType: Star, Lexeme: "*", Line: 1},
+		&Token{TokenType: STAR, Lexeme: "*", Line: 1},
 		NewGrouping(
 			NewBinary(
 				NewLiteral(3.0),
-				&Token{TokenType: Plus, Lexeme: "+", Line: 1},
+				&Token{TokenType: PLUS, Lexeme: "+", Line: 1},
 				NewLiteral(4.0),
 			),
 		),

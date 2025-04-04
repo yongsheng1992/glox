@@ -23,7 +23,7 @@ func (parser *Parser) expression() Expr {
 func (parser *Parser) term() Expr {
 	expr := parser.factor()
 
-	for parser.match(Minus, Plus) {
+	for parser.match(MINUS, PLUS) {
 		operator := parser.previous()
 		expr = NewBinary(expr, operator, parser.factor())
 	}
@@ -34,7 +34,7 @@ func (parser *Parser) term() Expr {
 func (parser *Parser) factor() Expr {
 	expr := parser.unary()
 
-	for parser.match(Star, Slash) {
+	for parser.match(STAR, SLASH) {
 		operator := parser.previous()
 		expr = NewBinary(expr, operator, parser.unary())
 	}
@@ -43,7 +43,7 @@ func (parser *Parser) factor() Expr {
 }
 
 func (parser *Parser) unary() Expr {
-	if parser.match(Bang, Minus) {
+	if parser.match(BANG, MINUS) {
 		return NewUnary(parser.previous(), parser.unary())
 	} else {
 		return parser.primary()
@@ -51,13 +51,13 @@ func (parser *Parser) unary() Expr {
 }
 
 func (parser *Parser) primary() Expr {
-	if parser.match(Number) {
+	if parser.match(NUMBER) {
 		return NewLiteral(parser.previous().Literal)
-	} else if parser.match(String) {
-		panic(NewParseError(parser.peek(), "String is currently unsupported!"))
-	} else if parser.match(LeftParen) {
+	} else if parser.match(STRING) {
+		panic(NewParseError(parser.peek(), "STRING is currently unsupported!"))
+	} else if parser.match(LPAREN) {
 		expr := parser.expression()
-		parser.consume(RightParen, "Expect ')' after expression.")
+		parser.consume(RPAREN, "Expect ')' after expression.")
 		return NewGrouping(expr)
 	} else {
 		panic(NewParseError(parser.peek(), "Expect expression."))
@@ -107,7 +107,7 @@ func (parser *Parser) consume(tokenType TokenType, message string) *Token {
 	if parser.check(tokenType) {
 		return parser.advance()
 	}
-	panic(NewParseError(parser.peek(), "Expect ')' after expression."))
+	panic(NewParseError(parser.peek(), message))
 }
 
 // isAtEnd

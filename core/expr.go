@@ -1,10 +1,10 @@
 package core
 
 type Expr interface {
-	accept(visitor Visitor) interface{}
+	accept(visitor ExprVisitor) interface{}
 }
 
-type Visitor interface {
+type ExprVisitor interface {
 	visitBinaryExpr(binary *Binary) interface{}
 	visitLiteralExpr(literal *Literal) interface{}
 	visitUnaryExpr(unary *Unary) interface{}
@@ -18,7 +18,7 @@ type Binary struct {
 	right    Expr
 }
 
-func (binary *Binary) accept(visitor Visitor) interface{} {
+func (binary *Binary) accept(visitor ExprVisitor) interface{} {
 	return visitor.visitBinaryExpr(binary)
 }
 
@@ -35,7 +35,7 @@ type Unary struct {
 	right    Expr
 }
 
-func (unary *Unary) accept(visitor Visitor) interface{} {
+func (unary *Unary) accept(visitor ExprVisitor) interface{} {
 	return visitor.visitUnaryExpr(unary)
 }
 
@@ -50,7 +50,7 @@ type Literal struct {
 	value interface{}
 }
 
-func (literal *Literal) accept(visitor Visitor) interface{} {
+func (literal *Literal) accept(visitor ExprVisitor) interface{} {
 	return visitor.visitLiteralExpr(literal)
 }
 
@@ -66,7 +66,7 @@ type Logical struct {
 	right    Expr
 }
 
-func (logical *Logical) accept(visitor Visitor) interface{} {
+func (logical *Logical) accept(visitor ExprVisitor) interface{} {
 	return visitor.visitLogicalExpr(logical)
 }
 
@@ -82,7 +82,7 @@ type Grouping struct {
 	expr Expr
 }
 
-func (grouping *Grouping) accept(visitor Visitor) interface{} {
+func (grouping *Grouping) accept(visitor ExprVisitor) interface{} {
 	return visitor.visitGrouping(grouping)
 }
 func NewGrouping(expr Expr) *Grouping {

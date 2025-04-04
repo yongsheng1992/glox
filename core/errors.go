@@ -23,4 +23,17 @@ func (pe *ParseError) Error() string {
 }
 
 type RuntimeError struct {
+	token   *Token
+	message string
+}
+
+func NewRuntimeError(token *Token, message string) *RuntimeError {
+	return &RuntimeError{
+		token:   token,
+		message: message,
+	}
+}
+
+func (re *RuntimeError) Error() string {
+	return fmt.Sprintf(reportFmt, re.token.Line, re.token.Lexeme, re.message)
 }

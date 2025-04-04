@@ -16,31 +16,31 @@ func TestSingleCharacterTokens(t *testing.T) {
 			input: `var imAVariable = "here is my value";`,
 			want: []*Token{
 				{
-					TokenType: Var,
+					TokenType: VAR,
 					Lexeme:    "var",
 					Literal:   nil,
 					Line:      1,
 				},
 				{
-					TokenType: Identifier,
+					TokenType: IDENTIFIER,
 					Lexeme:    "imAVariable",
 					Literal:   nil,
 					Line:      1,
 				},
 				{
-					TokenType: Equal,
+					TokenType: EQUAL,
 					Lexeme:    "=",
 					Literal:   nil,
 					Line:      1,
 				},
 				{
-					TokenType: String,
+					TokenType: STRING,
 					Lexeme:    `"here is my value"`,
 					Literal:   "here is my value",
 					Line:      1,
 				},
 				{
-					TokenType: SemiColon,
+					TokenType: SEMICOLON,
 					Lexeme:    `;`,
 					Literal:   nil,
 					Line:      1,

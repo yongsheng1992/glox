@@ -5,22 +5,22 @@ import (
 )
 
 var keywords = map[string]TokenType{
-	"and":    And,
-	"class":  Class,
-	"else":   Else,
-	"false":  False,
-	"fun":    Fun,
-	"for":    For,
+	"and":    AND,
+	"class":  CLASS,
+	"else":   ELSE,
+	"false":  FALSE,
+	"fun":    FUN,
+	"for":    FOR,
 	"if":     IF,
-	"nil":    Nil,
-	"or":     Or,
-	"print":  Print,
-	"return": Return,
-	"super":  Super,
-	"this":   This,
-	"true":   True,
-	"var":    Var,
-	"While":  While,
+	"nil":    NIL,
+	"or":     OR,
+	"print":  PRINT,
+	"return": RETURN,
+	"super":  SUPER,
+	"this":   THIS,
+	"true":   TRUE,
+	"var":    VAR,
+	"WHILE":  WHILE,
 	"Eof":    Eof,
 }
 
@@ -44,56 +44,56 @@ func (s *Scanner) scanToken() {
 	ch := s.advance()
 	switch ch {
 	case '(':
-		s.addToken(LeftParen, nil)
+		s.addToken(LPAREN, nil)
 	case ')':
-		s.addToken(RightParen, nil)
+		s.addToken(RPAREN, nil)
 	case '{':
-		s.addToken(LeftBrace, nil)
+		s.addToken(LBRACE, nil)
 	case '}':
-		s.addToken(RightBrace, nil)
+		s.addToken(RBRACE, nil)
 	case ',':
-		s.addToken(Comma, nil)
+		s.addToken(COMMA, nil)
 	case '.':
-		s.addToken(Dot, nil)
+		s.addToken(DOT, nil)
 	case '-':
-		s.addToken(Minus, nil)
+		s.addToken(MINUS, nil)
 	case '+':
-		s.addToken(Plus, nil)
+		s.addToken(PLUS, nil)
 	case ';':
-		s.addToken(SemiColon, nil)
+		s.addToken(SEMICOLON, nil)
 	case '/':
 		if s.match('/') {
 			for s.peek() != '\n' && !s.isAtEnd() {
 				s.advance()
 			}
 		} else {
-			s.addToken(Slash, nil)
+			s.addToken(SLASH, nil)
 		}
 	case '*':
-		s.addToken(Star, nil)
+		s.addToken(STAR, nil)
 	case '!':
 		if s.match('=') {
-			s.addToken(BangEqual, nil)
+			s.addToken(BANG_EQUAL, nil)
 		} else {
-			s.addToken(Bang, nil)
+			s.addToken(BANG, nil)
 		}
 	case '=':
 		if s.match('=') {
-			s.addToken(EqualEqual, nil)
+			s.addToken(EQUAL_EQUAL, nil)
 		} else {
-			s.addToken(Equal, nil)
+			s.addToken(EQUAL, nil)
 		}
 	case '>':
 		if s.match('=') {
-			s.addToken(GreaterEqual, nil)
+			s.addToken(GREATER_EQUAL, nil)
 		} else {
-			s.addToken(Greater, nil)
+			s.addToken(GREATER, nil)
 		}
 	case '<':
 		if s.match('=') {
-			s.addToken(LessEqual, nil)
+			s.addToken(LESS_EQUAL, nil)
 		} else {
-			s.addToken(Less, nil)
+			s.addToken(LESS, nil)
 		}
 	case '"':
 		s.string()
@@ -117,7 +117,7 @@ func (s *Scanner) identifier() {
 	if tokeType, exist := keywords[s.source[s.start:s.current]]; exist {
 		s.addToken(tokeType, nil)
 	} else {
-		s.addToken(Identifier, nil)
+		s.addToken(IDENTIFIER, nil)
 	}
 }
 
@@ -146,7 +146,7 @@ func (s *Scanner) number() {
 	if err != nil {
 		panic(err)
 	}
-	s.addToken(Number, number)
+	s.addToken(NUMBER, number)
 }
 
 func (s *Scanner) string() {
@@ -163,7 +163,7 @@ func (s *Scanner) string() {
 
 	s.advance()
 	value := s.source[s.start+1 : s.current-1]
-	s.addToken(String, value)
+	s.addToken(STRING, value)
 }
 
 // advance get a character and increase `current`

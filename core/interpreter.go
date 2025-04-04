@@ -19,13 +19,13 @@ func (i *Interpreter) visitBinaryExpr(binary *Binary) interface{} {
 	i.checkNumberOperand(operator, left)
 	i.checkNumberOperand(operator, right)
 	switch operator.TokenType {
-	case Star:
+	case STAR:
 		return left.(float64) * right.(float64)
-	case Slash:
+	case SLASH:
 		return left.(float64) / right.(float64)
-	case Minus:
+	case MINUS:
 		return left.(float64) - right.(float64)
-	case Plus:
+	case PLUS:
 		return left.(float64) + right.(float64)
 	default:
 		return nil
@@ -39,7 +39,7 @@ func (i *Interpreter) visitLiteralExpr(literal *Literal) interface{} {
 func (i *Interpreter) visitUnaryExpr(unary *Unary) interface{} {
 	right := i.evaluate(unary.right)
 	switch unary.operator.TokenType {
-	case Minus:
+	case MINUS:
 		i.checkNumberOperand(unary.operator, right)
 		return -(right).(float64)
 	default:
@@ -51,9 +51,9 @@ func (i *Interpreter) visitLogicalExpr(logical *Logical) interface{} {
 	left := i.evaluate(logical.left)
 	right := i.evaluate(logical.right)
 	switch logical.operator.TokenType {
-	case Or:
+	case OR:
 		return left.(bool) || right.(bool)
-	case And:
+	case AND:
 		return left.(bool) && right.(bool)
 	default:
 		return nil

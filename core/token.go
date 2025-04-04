@@ -31,53 +31,53 @@ const (
 
 	// Single-character tokens.
 
-	LeftParen TokenType = iota
-	RightParen
-	LeftBrace
-	RightBrace
-	Comma
-	Dot
-	Minus
-	Plus
-	SemiColon
-	Slash
-	Star
+	LPAREN TokenType = iota
+	RPAREN
+	LBRACE
+	RBRACE
+	COMMA
+	DOT
+	MINUS
+	PLUS
+	SEMICOLON
+	SLASH
+	STAR
 
 	// One or two character tokens.
 
-	Bang
-	BangEqual
-	Equal
-	EqualEqual
-	Greater
-	GreaterEqual
-	Less
-	LessEqual
+	BANG
+	BANG_EQUAL
+	EQUAL
+	EQUAL_EQUAL
+	GREATER
+	GREATER_EQUAL
+	LESS
+	LESS_EQUAL
 
 	// Literals.
 
-	Identifier
-	String
-	Number
+	IDENTIFIER
+	STRING
+	NUMBER
 
 	// Keywords.
 
-	And
-	Class
-	Else
-	False
-	Fun
-	For
+	AND
+	CLASS
+	ELSE
+	FALSE
+	FUN
+	FOR
 	IF
-	Nil
-	Or
-	Print
-	Return
-	Super
-	This
-	True
-	Var
-	While
+	NIL
+	OR
+	PRINT
+	RETURN
+	SUPER
+	THIS
+	TRUE
+	VAR
+	WHILE
 
 	Eof
 )
@@ -86,7 +86,7 @@ func (t TokenType) String() string {
 	return []string{
 		"(", ")", "{", "}", ",", ".", "-", "+", ";", "/", "*",
 		"!", "!=", "=", "==", ">", ">=", "<", "<=",
-		"Identifier", "String", "NUmber",
+		"IDENTIFIER", "STRING", "NUMBER",
 		"and", "class", "else", "false", "fun", "for", "if", "nil", "or", "print", "return", "super", "this", "true", "var", "while",
 		"eof",
 	}[t]
