@@ -50,3 +50,30 @@ primary = NUMBER | "true" | "false" | "(" expression ")";
 最终实现的递归下降的解析器需要按照产生式的规则生成表达式。
 
 需要注意，在lox中数字只用number类型，可以是整型，也可以是浮点型，这里和java版本的实现类似，最终只有float64的数字。
+
+## 解释器
+
+表达式只是一个具有层级的表达式树，解释器需要解释每个表达式，最终产生一个值。对于表达式，解释器其实是一个访问者，具体的逻辑由解释器来处理。所以需要实现定义的访问者接口。
+
+```go
+type Interpreter struct {
+	expr Expr
+}
+func (i *Interpreter) visitBinaryExpr(binary *Binary) interface{} {}
+func (i *Interpreter) visitLiteralExpr(literal *Literal) interface{} {}
+func (i *Interpreter) visitUnaryExpr(unary *Unary) interface{} {}
+func (i *Interpreter) visitLogicalExpr(logical *Logical) interface{} {}
+func (i *Interpreter) visitGrouping(grouping *Grouping) interface{} {}
+```
+
+然后定义`evaluate`方法：
+```go
+
+func (i *Interpreter) evaluate(expr Expr) {
+	return expr.accept(i)
+}
+```
+
+## Go on
+
+Equality和Comparison。感觉都是比较啊，前者比较是否相等，后者是比大小。

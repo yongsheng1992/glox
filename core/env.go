@@ -12,8 +12,16 @@ func NewEnv() *Env {
 	}
 }
 
-func (env *Env) put(name string, value interface{}) {
-	env.values[name] = value
+func (env *Env) assign(token *Token, value interface{}) {
+	if _, exist := env.values[token.Lexeme]; !exist {
+		panic(NewRuntimeError(token, fmt.Sprintf("Undefined variable '%s'.", token.Lexeme)))
+	} else {
+		env.values[token.Lexeme] = value
+	}
+}
+
+func (env *Env) define(token *Token, value interface{}) {
+	env.values[token.Lexeme] = value
 }
 
 func (env *Env) get(token *Token) interface{} {
