@@ -9,7 +9,9 @@ type ExprVisitor interface {
 	visitLiteralExpr(literal *Literal) interface{}
 	visitUnaryExpr(unary *Unary) interface{}
 	visitLogicalExpr(logical *Logical) interface{}
-	visitGrouping(grouping *Grouping) interface{}
+	visitGroupingExpr(grouping *Grouping) interface{}
+	visitVarExpr(v *VarExpr) interface{}
+	visitAssignExpr(assign *Assign) interface{}
 }
 
 type Binary struct {
@@ -83,10 +85,40 @@ type Grouping struct {
 }
 
 func (grouping *Grouping) accept(visitor ExprVisitor) interface{} {
-	return visitor.visitGrouping(grouping)
+	return visitor.visitGroupingExpr(grouping)
 }
 func NewGrouping(expr Expr) *Grouping {
 	return &Grouping{
 		expr: expr,
 	}
+}
+
+type VarExpr struct {
+	token *Token
+}
+
+func NewVarExpr(token *Token) *VarExpr {
+	return &VarExpr{
+		token: token,
+	}
+}
+
+func (v *VarExpr) accept(visitor ExprVisitor) interface{} {
+	return visitor.visitVarExpr(v)
+}
+
+type Assign struct {
+	token *Token
+	expr  Expr
+}
+
+func NewAssign(token *Token, expr Expr) *Assign {
+	return &Assign{
+		token: token,
+		expr:  expr,
+	}
+}
+
+func (assign *Assign) accept(visitor ExprVisitor) interface{} {
+	return visitor.visitAssignExpr(assign)
 }

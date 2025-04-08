@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	lox := new(core.Lox)
+	lox := core.NewLox()
 	fmt.Println(os.Args)
 	if len(os.Args) > 2 {
 		fmt.Println("Usage: lox [script]")

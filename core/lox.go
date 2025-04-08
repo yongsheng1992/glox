@@ -8,6 +8,11 @@ import (
 )
 
 type Lox struct {
+	interpreter *Interpreter
+}
+
+func NewLox() *Lox {
+	return &Lox{interpreter: NewInterpreter()}
 }
 
 func (lox *Lox) error(line int, msg string) {
@@ -53,10 +58,7 @@ func (lox *Lox) run(source string) error {
 	tokens := scanner.scanTokens()
 
 	parser := NewParser(tokens)
-	expr := parser.parse()
-
-	interpreter := NewInterpreter(expr)
-	value := interpreter.evaluate(expr)
-	fmt.Printf("%f\n", value)
+	stmts := parser.parse()
+	lox.interpreter.evaluate(stmts)
 	return nil
 }

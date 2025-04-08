@@ -5,21 +5,88 @@ type Parser struct {
 	current int
 }
 
-func NewParser(token []*Token) *Parser {
+func NewParser(tokens []*Token) *Parser {
 	return &Parser{
-		tokens:  token,
+		tokens:  tokens,
 		current: 0,
 	}
 }
 
-func (parser *Parser) parse() Expr {
-	return parser.expression()
+func (parser *Parser) parse() []Stmt {
+	stmts := make([]Stmt, 0)
+	for !parser.isAtEnd() {
+		stmts = append(stmts, parser.declaration())
+	}
+	return stmts
 }
 
+func (parser *Parser) statement() Stmt {
+	if parser.match(PRINT) {
+		return parser.printStmt()
+	} else {
+		return parser.exprStmt()
+	}
+}
+
+func (parser *Parser) declaration() Stmt {
+	if parser.match(VAR) {
+		return parser.varDeclaration()
+	} else {
+		return parser.statement()
+	}
+}
+
+func (parser *Parser) varDeclaration() Stmt {
+	if parser.match(IDENTIFIER) {
+		identifier := parser.previous()
+		var expr Expr
+		if parser.match(EQUAL) {
+			expr = parser.expression()
+		}
+		parser.consume(SEMICOLON, "Expect ';' after expression.")
+		return NewVarStmt(identifier, expr)
+	}
+	panic("Expect identifier after 'var' keyword.")
+}
+
+func (parser *Parser) exprStmt() Stmt {
+	expr := parser.expression()
+	parser.consume(SEMICOLON, "Expect ';' after expression.")
+	return NewExprStmt(expr)
+}
+
+func (parser *Parser) printStmt() Stmt {
+	expr := parser.expression()
+	parser.consume(SEMICOLON, "Expect ';' after value.")
+	return NewPrint(expr)
+}
 func (parser *Parser) expression() Expr {
-	return parser.term()
+	return parser.equality()
 }
 
+func (parser *Parser) equality() Expr {
+	left := parser.comparison()
+
+	for parser.match(EQUAL_EQUAL, BANG_EQUAL) {
+		right := parser.comparison()
+		operator := parser.previous()
+		return NewBinary(left, operator, right)
+	}
+
+	return left
+}
+
+func (parser *Parser) comparison() Expr {
+	left := parser.term()
+
+	for parser.match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL) {
+		right := parser.term()
+		operator := parser.previous()
+		return NewBinary(left, operator, right)
+	}
+
+	return left
+}
 func (parser *Parser) term() Expr {
 	expr := parser.factor()
 
@@ -54,11 +121,14 @@ func (parser *Parser) primary() Expr {
 	if parser.match(NUMBER) {
 		return NewLiteral(parser.previous().Literal)
 	} else if parser.match(STRING) {
-		panic(NewParseError(parser.peek(), "STRING is currently unsupported!"))
+		return NewLiteral(parser.previous().Literal)
 	} else if parser.match(LPAREN) {
 		expr := parser.expression()
 		parser.consume(RPAREN, "Expect ')' after expression.")
 		return NewGrouping(expr)
+	} else if parser.match(IDENTIFIER) {
+		token := parser.previous()
+		return NewVarExpr(token)
 	} else {
 		panic(NewParseError(parser.peek(), "Expect expression."))
 	}
@@ -84,9 +154,6 @@ func (parser *Parser) check(tokenType TokenType) bool {
 
 // peek
 func (parser *Parser) peek() *Token {
-	if parser.isAtEnd() {
-		return &Token{TokenType: Eof}
-	}
 	return parser.tokens[parser.current]
 }
 
@@ -112,5 +179,5 @@ func (parser *Parser) consume(tokenType TokenType, message string) *Token {
 
 // isAtEnd
 func (parser *Parser) isAtEnd() bool {
-	return parser.current >= len(parser.tokens)
+	return parser.peek().TokenType == Eof
 }
